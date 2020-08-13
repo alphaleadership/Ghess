@@ -9,10 +9,6 @@ socket.on("reset", reset);
 socket.on("ajuste", ajuste);
 socket.on("eat", eat);
 
-socket.on("player", (isPlayer) => {
-  player = isPlayer
-})
-
 document.addEventListener("DOMContentLoaded", () => {
   
   session = prompt("Veuillez choisir une session.")
@@ -22,6 +18,28 @@ document.addEventListener("DOMContentLoaded", () => {
   socket.on("userCountUpdate", userCount => {
     document.getElementById("userCount").innerText = `👁️ ${Math.max(0,userCount - 2)} viewers | ♟️ ${Math.min(2,userCount)} players`
   })
+  
+  socket.on("player", (isPlayer) => {
+    player = isPlayer
+    if(!player){
+      document.querySelectorAll("#panel > button, #panel > label").forEach(e => {
+        e.style.display = "none"
+      })
+    }
+  })
+  
+  socket.on("boardRequest", () => {
+    socket.emit("boardResponse", document.getElementById("board").innerHTML)
+  })
+  
+  socket.on("boardUpdate", board => {
+    document.getElementById("board").innerHTML = board
+    Array.from(document.getElementById("board").children).forEach(e => {
+      e.onclick = onPieceClick
+    })
+  })
+  
+  socket.once("init", reset)
   
   const boardElement = document.getElementById("board")
   
@@ -37,35 +55,11 @@ document.addEventListener("DOMContentLoaded", () => {
     'BBKNNPPPPPPPPQRR'.split('').forEach((piece, index) => {
       const pieceElement = document.createElement('img')
       pieceElement.src = `img/${team}${piece}.png`
-      
       pieceElement.id = team + piece + index
-      
-      pieceElement.onclick = event => {
-        if(!player) return
-        const drag = document.getElementsByClassName("drag")[0]
-        if(drag){
-          if(drag === event.target) {
-            drag.classList.remove("drag")
-          }else{
-            if(drag.id[0] !== event.target.id[0]){
-              // eat target
-              eat_emit(drag.id, event.target.id)
-            }else {
-              drag.classList.remove("drag")
-              return
-            }
-            moveTo_emit(drag.id, event)
-          }
-        }else{
-          event.target.classList.add("drag")
-        }
-      }
-      
+      pieceElement.onclick = onPieceClick
       boardElement.appendChild(pieceElement)
     })
   })
-  
-  reset()
 })
 
 /**
@@ -202,6 +196,27 @@ function eat(eaterId, id){
 function eat_emit(eaterId, id){
   eat(eaterId, id)
   socket.emit("eat", eaterId, id)
+}
+
+function onPieceClick(event){
+  if(!player) return
+  const drag = document.getElementsByClassName("drag")[0]
+  if(drag){
+    if(drag === event.target) {
+      drag.classList.remove("drag")
+    }else{
+      if(drag.id[0] !== event.target.id[0]){
+        // eat target
+        eat_emit(drag.id, event.target.id)
+      }else {
+        drag.classList.remove("drag")
+        return
+      }
+      moveTo_emit(drag.id, event)
+    }
+  }else{
+    event.target.classList.add("drag")
+  }
 }
 
 function shifting(x, shift){

@@ -12,6 +12,11 @@ const sessions = {};
 
 io.on("connection", socket => {
   
+  socket.on("boardResponse", board => {
+    sessions[socket.session][sessions[socket.session].length-1]
+      .emit("boardUpdate", board)
+  })
+  
   socket.on("login", session => {
     
     socket.session = session
@@ -19,6 +24,13 @@ io.on("connection", socket => {
       sessions[session] = [socket]
     }else{
       sessions[session].push(socket)
+    }
+    
+    const length = sessions[session].length
+    if(length > 1){
+      sessions[session][0].emit("boardRequest")
+    }else{
+      socket.emit("init")
     }
     
     socket.emit("player", sessions[session].length < 3)
