@@ -1,0 +1,51 @@
+* {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, #board, #panel, #board > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+body {
+  z-index: 1;
+  min-height: 100vh;
+}
+
+#board {
+  z-index: 2;
+  width: 640px;
+  height: 640px;
+  background-image: url("img/board.png");
+}
+
+#board > * {
+  transition: left 500ms ease, top 500ms ease;
+  z-index: 3;
+  width: 80px;
+  height: 80px;
+}
+
+#panel {
+  display: flex;
+  top: 640px;
+}
+
+#panel > * {
+  white-space: nowrap;
+  padding: 20px;
+  margin: 20px;
+}
+
+#panel > *:hover {
+  background-color: #6161ff;
+  color: #fff;
+}
+
+.drag {
+  border: 3px solid #6161ff;
+}

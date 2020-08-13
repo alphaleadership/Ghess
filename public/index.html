@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" href="img/wK.png" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <title>Ghess</title>
+</head>
+<body>
+  <div id="board"></div>
+  <div id="panel">
+    <button onclick="reset_emit()">RESET</button>
+    <button onclick="ajusteAll_emit()">AJUSTE</button>
+    <label>AUTO AJUSTE
+      <input type="checkbox" checked id="auto-ajuste" title="auto ajuste">
+    </label>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
