@@ -1,3 +1,6 @@
+let
+  session = null,
+  player = false;
 
 const socket = io();
 
@@ -5,12 +8,23 @@ socket.on("moveTo", moveTo);
 socket.on("reset", reset);
 socket.on("ajuste", ajuste);
 
-const pieces = [];
+socket.on("player", (isPlayer) => {
+  player = isPlayer
+})
 
 document.addEventListener("DOMContentLoaded", () => {
+  
+  session = prompt("Veuillez choisir une session.")
+  socket.emit("login", session)
+  
+  socket.on("userJoin", userCount => {
+    document.getElementById("userCount").innerText = `👁️ ${Math.max(0,userCount - 2)} | ♟️ ${Math.min(2,userCount)}`
+  })
+  
   const boardElement = document.getElementById("board")
   
   boardElement.onclick = event => {
+    if(!player) return
     const drag = document.getElementsByClassName("drag")[0]
     if(drag && event.target.id === "board") {
       moveTo_emit(drag.id, event)
@@ -25,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       pieceElement.id = team + piece + index
       
       pieceElement.onclick = event => {
+        if(!player) return
         const drag = document.getElementsByClassName("drag")[0]
         if(drag){
           if(drag === event.target) {
@@ -49,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
       
-      pieces.push(pieceElement)
       boardElement.appendChild(pieceElement)
     })
   })
