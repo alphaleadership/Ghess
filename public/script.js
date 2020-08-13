@@ -17,9 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
   session = prompt("Veuillez choisir une session.")
   socket.emit("login", session)
+  document.getElementById("session").innerText = session
   
-  socket.on("userJoin", userCount => {
-    document.getElementById("userCount").innerText = `👁️ ${Math.max(0,userCount - 2)} | ♟️ ${Math.min(2,userCount)}`
+  socket.on("userCountUpdate", userCount => {
+    document.getElementById("userCount").innerText = `👁️ ${Math.max(0,userCount - 2)} viewers | ♟️ ${Math.min(2,userCount)} players`
   })
   
   const boardElement = document.getElementById("board")
@@ -189,15 +190,21 @@ function moveTo_emit(id, position){
 function eat(eaterId, id){
   const pieceElement = document.getElementById(id)
   const eaterElement = document.getElementById(eaterId)
-  pieceElement.style.left = "720px"
   if(eaterElement.id[0] === 'b'){
-    pieceElement.style.top = "100px"
+    pieceElement.style.left = `${shifting(800, 50)}px`
+    pieceElement.style.top = `${shifting(400, 50)}px`
   }else{
-    pieceElement.style.top = "440px"
+    pieceElement.style.left = `${shifting(800, 50)}px`
+    pieceElement.style.top = `${shifting(566, 50)}px`
   }
 }
 
 function eat_emit(eaterId, id){
   eat(eaterId, id)
   socket.emit("eat", eaterId, id)
+}
+
+function shifting(x, shift){
+  shift = (Math.random() * shift * 2) - shift
+  return x + shift
 }

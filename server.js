@@ -13,6 +13,7 @@ const sessions = {};
 io.on("connection", socket => {
   
   socket.on("login", session => {
+    
     socket.session = session
     if(!sessions[session]){
       sessions[session] = [socket]
@@ -24,8 +25,13 @@ io.on("connection", socket => {
     
     socket.join(session)
   
-    socket.emit("userJoin", sessions[session].length)
-    socket.broadcast.to(session).emit("userJoin", sessions[session].length)
+    socket.emit("userCountUpdate", sessions[session].length)
+    socket.broadcast.to(session).emit("userCountUpdate", sessions[session].length)
+  
+    socket.on("disconnect", () => {
+      sessions[socket.session] = sessions[socket.session].filter(s => s !== socket)
+      socket.broadcast.to(socket.session).emit("userCountUpdate", sessions[session].length)
+    })
   
     socket.on("moveTo", (id, pos) => {
       socket.broadcast.to(socket.session).emit("moveTo", id, pos)
@@ -41,10 +47,6 @@ io.on("connection", socket => {
   
     socket.on("eat", (eaterId, id) => {
       socket.broadcast.to(socket.session).emit("eat", eaterId, id)
-    })
-  
-    socket.on("disconnect", () => {
-      sessions[socket.session] = sessions[socket.session].filter(s => s !== socket)
     })
   })
 })
