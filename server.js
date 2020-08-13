@@ -28,15 +28,19 @@ io.on("connection", socket => {
     socket.broadcast.to(session).emit("userJoin", sessions[session].length)
   
     socket.on("moveTo", (id, pos) => {
-      socket.broadcast.to(socket.session).emit("moveTo", id, pos, socket.session)
+      socket.broadcast.to(socket.session).emit("moveTo", id, pos)
     })
   
     socket.on("reset", () => {
-      socket.broadcast.to(socket.session).emit("reset", socket.session)
+      socket.broadcast.to(socket.session).emit("reset")
     })
   
     socket.on("ajuste", (id) => {
-      socket.broadcast.to(socket.session).emit("ajuste", id, socket.session)
+      socket.broadcast.to(socket.session).emit("ajuste", id)
+    })
+  
+    socket.on("eat", (eaterId, id) => {
+      socket.broadcast.to(socket.session).emit("eat", eaterId, id)
     })
   
     socket.on("disconnect", () => {

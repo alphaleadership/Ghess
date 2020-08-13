@@ -7,6 +7,7 @@ const socket = io();
 socket.on("moveTo", moveTo);
 socket.on("reset", reset);
 socket.on("ajuste", ajuste);
+socket.on("eat", eat);
 
 socket.on("player", (isPlayer) => {
   player = isPlayer
@@ -47,12 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }else{
             if(drag.id[0] !== event.target.id[0]){
               // eat target
-              event.target.style.left = "720px"
-              if(drag.id[0] === 'b'){
-                event.target.style.top = "100px"
-              }else{
-                event.target.style.top = "440px"
-              }
+              eat_emit(drag.id, event.target.id)
             }else {
               drag.classList.remove("drag")
               return
@@ -188,4 +184,20 @@ function moveTo_emit(id, position){
   })
   if(document.getElementById("auto-ajuste").checked)
     ajuste_emit(id)
+}
+
+function eat(eaterId, id){
+  const pieceElement = document.getElementById(id)
+  const eaterElement = document.getElementById(eaterId)
+  pieceElement.style.left = "720px"
+  if(eaterElement.id[0] === 'b'){
+    pieceElement.style.top = "100px"
+  }else{
+    pieceElement.style.top = "440px"
+  }
+}
+
+function eat_emit(eaterId, id){
+  eat(eaterId, id)
+  socket.emit("eat", eaterId, id)
 }
