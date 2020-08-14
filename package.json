@@ -9,6 +9,8 @@
   },
   "devDependencies": {},
   "scripts": {
+    "start": "npx nodemon server.js",
+    "prettier": "npx prettier --write server.js public/script.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

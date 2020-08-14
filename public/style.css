@@ -23,6 +23,7 @@ body {
 }
 
 #board {
+  transition: all 1s ease;
   z-index: 2;
   width: 640px;
   height: 640px;
@@ -30,10 +31,18 @@ body {
 }
 
 #board > * {
-  transition: left 500ms ease, top 500ms ease;
+  transition: all 500ms ease;
   z-index: 3;
   width: 80px;
   height: 80px;
+}
+
+#board.rotate {
+  transform: rotate(180deg);
+}
+
+#board.rotate > * {
+  transform: rotate(180deg);
 }
 
 #panel {
