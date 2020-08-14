@@ -12,6 +12,12 @@ const sessions = {};
 
 io.on("connection", socket => {
   
+  const sessionsInfo = {}
+  for(const name in sessions)
+    sessionsInfo[name] = sessions[name].length
+  
+  socket.emit("connection", sessionsInfo)
+  
   socket.on("boardResponse", board => {
     sessions[socket.session][sessions[socket.session].length-1]
       .emit("boardUpdate", board)
@@ -43,22 +49,33 @@ io.on("connection", socket => {
     socket.on("disconnect", () => {
       sessions[socket.session] = sessions[socket.session].filter(s => s !== socket)
       socket.broadcast.to(socket.session).emit("userCountUpdate", sessions[session].length)
+      if(sessions[socket.session].length === 0)
+        delete sessions[socket.session]
     })
   
     socket.on("moveTo", (id, pos) => {
+      socket.emit("moveTo", id, pos)
       socket.broadcast.to(socket.session).emit("moveTo", id, pos)
     })
   
     socket.on("reset", () => {
+      socket.emit("reset")
       socket.broadcast.to(socket.session).emit("reset")
     })
   
     socket.on("ajuste", (id) => {
+      socket.emit("ajuste", id)
       socket.broadcast.to(socket.session).emit("ajuste", id)
     })
   
     socket.on("eat", (eaterId, id) => {
+      socket.emit("eat", eaterId, id)
       socket.broadcast.to(socket.session).emit("eat", eaterId, id)
+    })
+    
+    socket.on("message", text => {
+      socket.emit("message", text)
+      socket.broadcast.to(socket.session).emit("message", text)
     })
   })
 })

@@ -12,14 +12,15 @@
 <body>
   <div id="board"></div>
   <div id="panel">
-    <h1>SESSION: <span id="session">?</span></h1>
-    <button onclick="reset_emit()">RESET</button>
-    <button onclick="ajusteAll_emit()">AJUSTE</button>
-    <label>AUTO AJUSTE
-      <input type="checkbox" checked id="auto-ajuste" title="auto ajuste">
-    </label>
+    <h2>SESSION: <span id="session">?</span></h2>
+    <button id="reset">RESET</button>
     <div id="userCount">👁️ 0 viewers | ♟️ 0 players</div>
+    <div id="console">
+      <h3>Welcome to Ghess by Ghom.</h3>
+    </div>
+    <input type="text" id="chat" placeholder="Type a thing and press Enter.">
   </div>
+  <div id="trash"></div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
 </body>

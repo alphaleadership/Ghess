@@ -9,7 +9,7 @@ button {
   font-size: 20px;
 }
 
-body, #board, #panel, #board > * {
+body, #board, #panel, #trash, #board > * {
   position: absolute;
   top: 0;
   left: 0;
@@ -40,6 +40,8 @@ body {
   display: flex;
   flex-direction: column;
   left: 640px;
+  width: 300px;
+  height: 640px;
 }
 
 #panel > * {
@@ -56,6 +58,31 @@ body {
 #panel > label:hover {
   background-color: #6161ff;
   color: #fff;
+}
+
+#console {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: start;
+  white-space: pre-wrap;
+  text-align: left;
+  overflow: hidden;
+}
+
+#trash {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  border: 2px solid #000;
+  justify-content: left;
+  align-items: start;
+  top: 0;
+  left: 940px;
+  width: 321px;
+  height: 641px;
+  background-color: antiquewhite;
 }
 
 .drag {
