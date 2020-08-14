@@ -71,6 +71,19 @@ body {
   overflow: hidden;
 }
 
+#chat {
+  display: flex;
+}
+
+#chat > div {
+  display: flex;
+  flex-direction: column;
+}
+
+#field {
+  flex-grow: 1;
+}
+
 #trash {
   display: flex;
   flex-wrap: wrap;

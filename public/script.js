@@ -9,24 +9,31 @@
   socket.on("reset", reset);
   socket.on("ajuste", ajuste);
   socket.on("eat", eat);
-  socket.on("message", text => log("👤 >> " + text));
+  socket.on("message", log);
   
   document.addEventListener("DOMContentLoaded", () => {
     
     socket.once("connection", sessions => {
-      session = prompt(`
-Veuillez choisir une session parmi les suivantes ou en créer une.
-
-${Object.keys(sessions).map(name => `- ${name}: ${sessions[name]} users`).join('\n')}
+      const indication = Object.keys(sessions).length > 0 ?
+        "Veuillez choisir une partie parmi les suivantes ou en créer une." :
+        "Veuillez créer une partie."
+      session = prompt(`${indication}\n
+${Object.keys(sessions).map(name => `id: ${name}, users: ${sessions[name]}`).join('\n')}
       `.trim())
+      if(session.length === 0)
+        session = "General"
       socket.emit("login", session)
       document.getElementById("session").innerText = session
     })
     
     document.getElementById("reset").onclick = () => socket.emit('reset');
-    document.getElementById("chat").onkeydown = event => {
+    document.getElementById("field").onkeydown = event => {
       if(event.key === "Enter") {
-        socket.emit("message", event.target.value);
+        const emoji = document.getElementById("emoji").value
+        const color = document.getElementById("color").value
+        const text = event.target.value
+        const message = `${emoji} ${text}`
+        socket.emit("message", message, color);
         event.target.value = ""
       }
     }
@@ -92,6 +99,11 @@ ${Object.keys(sessions).map(name => `- ${name}: ${sessions[name]} users`).join('
    */
   function reset() {
     log(`Reset.`)
+    document.querySelectorAll("#trash > *").forEach(e => {
+      e.classList.remove("eaten")
+      document.getElementById("board").appendChild(e)
+    })
+    
     ;['b', 'w'].forEach(team => {
       'BBKNNPPPPPPPPQRR'.split('').forEach((piece, index) => {
         const pieceElement = document.getElementById(team + piece + index)
@@ -151,9 +163,9 @@ ${Object.keys(sessions).map(name => `- ${name}: ${sessions[name]} users`).join('
     }, 1000)
   }
   
-  function moveTo(id, position) {
+  function moveTo(id, position, disableLog) {
     const pieceElement = document.getElementById(id)
-    log(`${icon(pieceElement)} move.`)
+    if(!disableLog) log(`${icon(pieceElement)} move.`)
     // move drag on target position
     pieceElement.style.left = (position.x - 40) + "px"
     pieceElement.style.top = (position.y - 40) + "px"
@@ -193,7 +205,7 @@ ${Object.keys(sessions).map(name => `- ${name}: ${sessions[name]} users`).join('
         socket.emit("moveTo", drag.id, {
           x: event.x,
           y: event.y
-        })
+        }, true)
       }
     } else {
       event.target.classList.add("drag")
@@ -205,9 +217,10 @@ ${Object.keys(sessions).map(name => `- ${name}: ${sessions[name]} users`).join('
     return x + shift
   }
   
-  function log(text){
+  function log(text, color){
     const div = document.createElement("div")
     div.innerHTML = text
+    if(color) div.style.color = color
     document.getElementById("console").appendChild(div)
   }
   

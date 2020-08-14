@@ -53,9 +53,9 @@ io.on("connection", socket => {
         delete sessions[socket.session]
     })
   
-    socket.on("moveTo", (id, pos) => {
-      socket.emit("moveTo", id, pos)
-      socket.broadcast.to(socket.session).emit("moveTo", id, pos)
+    socket.on("moveTo", (id, pos, dLog) => {
+      socket.emit("moveTo", id, pos, dLog)
+      socket.broadcast.to(socket.session).emit("moveTo", id, pos, dLog)
     })
   
     socket.on("reset", () => {
@@ -73,9 +73,9 @@ io.on("connection", socket => {
       socket.broadcast.to(socket.session).emit("eat", eaterId, id)
     })
     
-    socket.on("message", text => {
-      socket.emit("message", text)
-      socket.broadcast.to(socket.session).emit("message", text)
+    socket.on("message", (text, color) => {
+      socket.emit("message", text, color)
+      socket.broadcast.to(socket.session).emit("message", text, color)
     })
   })
 })

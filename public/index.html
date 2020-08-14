@@ -16,9 +16,25 @@
     <button id="reset">RESET</button>
     <div id="userCount">👁️ 0 viewers | ♟️ 0 players</div>
     <div id="console">
-      <h3>Welcome to Ghess by Ghom.</h3>
+      <h3>Welcome to Ghess.</h3>
     </div>
-    <input type="text" id="chat" placeholder="Type a thing and press Enter.">
+    <div id="chat">
+      <input type="text" id="field" placeholder="Type a thing and press Enter.">
+      <div>
+        <select id="emoji">
+          <option value="👤">👤</option>
+          <option value="👶">👶</option>
+          <option value="😙">😙</option>
+          <option value="👮">👮</option>
+          <option value="🦸">🦸</option>
+          <option value="🧙">🧙</option>
+          <option value="🕵️">🕵️</option>
+          <option value="🤓">🤓</option>
+          <option value="🐸">🐸</option>
+        </select>
+        <input type="color" id="color">
+      </div>
+    </div>
   </div>
   <div id="trash"></div>
   <script src="/socket.io/socket.io.js"></script>
